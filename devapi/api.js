@@ -4,7 +4,14 @@ const router = express.Router();
 
 let devProfiles = [];
 
-router.get('/developers', (req, res) => res.send(devProfiles));
+router.get('/developers', (req, res) => {
+    if(getAllDevProfilesData().length >  0){
+        res.status(200).send(getAllDevProfilesData());
+    }
+    else{
+        res.status(404).send("No Dev profile content at the moment");
+    }
+});
 
 router.get('/developers/:id', (req, res) => {
     const devProfileId = req.params.id;
@@ -58,6 +65,18 @@ function getReposDataForDev(responseData){
     });
     console.log(repoUpdatedData);
     return repoUpdatedData;
+}
+
+function getAllDevProfilesData(){
+    const allDevProfileData = devProfiles.map(data =>{
+        // constructing object to be returned via map function
+      return {
+          "id" : data.id,
+          "avatar_url": data.avatar_url,
+      };
+    });
+    console.log(allDevProfileData);
+    return allDevProfileData;
 }
 
 module.exports = router;
